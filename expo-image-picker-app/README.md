@@ -83,3 +83,77 @@ const styles = StyleSheet.create({
   },
 });
 ```
+
+## 4. カメラから撮影した画像を取得する
+
+```tsx
+import { useState } from "react";
+import {
+  Button,
+  Image,
+  View,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  Text,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { Stack } from "expo-router";
+
+export default function Index() {
+  const [images, setImages] = useState<string[]>([]);
+  const [permission, requestPermission] = ImagePicker.useCameraPermissions();
+
+  if (!permission) {
+    // カメラパーミッションの読み込み中
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // カメラパーミッションが拒否された
+    return (
+      <View style={styles.container}>
+        <Text>カメラのアクセス許可が必要です</Text>
+        <Button onPress={requestPermission} title="許可する" />
+      </View>
+    );
+  }
+
+  // 省略
+
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      // 本来は画像をアップロードする処理を書く
+      setImages((images) => [result.assets[0].uri, ...images]);
+    }
+  };
+
+  const addPhoto = () => {
+    Alert.alert("写真を追加", "カメラロールから写真を選択します", [
+      { text: "キャンセル", style: "cancel" },
+      { text: "ライブラリから写真を選択", onPress: pickImage },
+      { text: "カメラで撮影", onPress: takePhoto },
+    ]);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: "ホーム",
+          headerRight: () => <Button title="写真を追加" onPress={addPhoto} />,
+        }}
+      />
+      {/* 省略 */}
+    </View>
+  );
+}
+```
