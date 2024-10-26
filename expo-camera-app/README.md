@@ -1,5 +1,10 @@
 ## Expo Camera App
 
+## 環境
+
+- Node.js: v20.16.0
+- npm: v10.8.1
+
 ## 1. プロジェクトの作成
 
 ```bash
@@ -96,4 +101,50 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+```
+
+## 4. QR・バーコードリーダーの実装
+
+```tsx
+import {
+  CameraView,
+  CameraType,
+  useCameraPermissions,
+  BarcodeScanningResult,
+} from "expo-camera";
+
+export default function Index() {
+  const [barcodeResult, setBarcodeResult] = useState<string | null>(null);
+
+  // コード省略
+
+  function onBarCodeScanned({ data }: BarcodeScanningResult) {
+    setBarcodeResult(data);
+  }
+
+  return (
+    <View style={styles.container}>
+      <CameraView
+        style={styles.camera}
+        facing={facing}
+        onBarcodeScanned={onBarCodeScanned}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={styles.text}>{barcodeResult}</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+            <Text style={styles.text}>カメラ反転</Text>
+          </TouchableOpacity>
+        </View>
+      </CameraView>
+    </View>
+  );
+}
 ```

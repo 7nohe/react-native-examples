@@ -1,10 +1,16 @@
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import {
+  CameraView,
+  CameraType,
+  useCameraPermissions,
+  BarcodeScanningResult,
+} from "expo-camera";
 import { useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Index() {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
+  const [barcodeResult, setBarcodeResult] = useState<string | null>(null);
 
   if (!permission) {
     // カメラパーミッションの読み込み中
@@ -27,9 +33,26 @@ export default function Index() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
+  function onBarCodeScanned({ data }: BarcodeScanningResult) {
+    setBarcodeResult(data);
+  }
+
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing}>
+      <CameraView
+        style={styles.camera}
+        facing={facing}
+        onBarcodeScanned={onBarCodeScanned}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={styles.text}>{barcodeResult}</Text>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <Text style={styles.text}>カメラ反転</Text>
