@@ -1,0 +1,85 @@
+## Expo Image Picker App
+
+## 環境
+
+- Node.js: v20.16.0
+- npm: v10.8.1
+
+## 1. プロジェクトの作成
+
+```bash
+npx create-expo-app@latest expo-image-picker-app
+cd expo-image-picker-app
+npm run ios
+# または
+npm run android
+```
+
+不要なボイラープレートを削除する。
+
+```bash
+npm run reset-project
+```
+
+## 2. Expo Camera をインストール
+
+```bash
+npx expo install expo-image-picker
+```
+
+## 3. 写真ライブラリアクセス機能の実装
+
+```tsx
+import { useState } from "react";
+import { Button, Image, View, StyleSheet, ScrollView } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { Stack } from "expo-router";
+
+export default function Index() {
+  const [images, setImages] = useState<string[]>([]);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      // 本来は画像をアップロードする処理を書く
+      setImages((images) => [result.assets[0].uri, ...images]);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: "ホーム",
+          headerRight: () => <Button title="写真を選択" onPress={pickImage} />,
+        }}
+      />
+      <ScrollView>
+        {images.map((image, index) => (
+          <Image key={index} source={{ uri: image }} style={styles.image} />
+        ))}
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  image: {
+    width: 200,
+    height: 200,
+  },
+});
+```

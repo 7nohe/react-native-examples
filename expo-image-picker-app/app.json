@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expo-camera-app",
-    "slug": "expo-camera-app",
+    "name": "expo-image-picker-app",
+    "slug": "expo-image-picker-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -27,15 +27,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "写真撮影に使用します",
-          "microphonePermission": "ビデオ撮影に使用します",
-          "recordAudioAndroid": true
-        }
-      ]
+      "expo-router"
     ],
     "experiments": {
       "typedRoutes": true
