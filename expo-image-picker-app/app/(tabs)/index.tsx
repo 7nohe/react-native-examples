@@ -1,15 +1,8 @@
 import { useState } from "react";
-import {
-  Button,
-  Image,
-  View,
-  StyleSheet,
-  ScrollView,
-  Alert,
-  Text,
-} from "react-native";
+import { Button, View, StyleSheet, Alert, Text, FlatList } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Stack } from "expo-router";
+import { Image } from "expo-image";
 
 export default function Index() {
   const [images, setImages] = useState<string[]>([]);
@@ -77,11 +70,13 @@ export default function Index() {
           headerRight: () => <Button title="写真を追加" onPress={addPhoto} />,
         }}
       />
-      <ScrollView>
-        {images.map((image, index) => (
-          <Image key={index} source={{ uri: image }} style={styles.image} />
-        ))}
-      </ScrollView>
+      <FlatList
+        data={images}
+        numColumns={2}
+        renderItem={({ item }) => (
+          <Image source={{ uri: item }} style={styles.image} />
+        )}
+      />
     </View>
   );
 }

@@ -157,3 +157,23 @@ export default function Index() {
   );
 }
 ```
+
+## 5. Expo Image による画像表示最適化
+
+```bash
+npx expo install expo-image
+```
+
+```tsx
+import { Image } from "expo-image";
+
+// 省略
+
+<FlatList
+  data={images}
+  numColumns={2}
+  renderItem={({ item }) => (
+    <Image source={{ uri: item }} style={styles.image} />
+  )}
+/>;
+```
