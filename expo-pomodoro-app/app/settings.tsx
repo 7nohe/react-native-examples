@@ -8,7 +8,14 @@ import {
   SettingValues,
 } from "@/libs/settings";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Alert,
+  ScrollView,
+} from "react-native";
 
 export default function Settings() {
   const [formValues, setFormValues] = useState<SettingValues>({
@@ -21,25 +28,31 @@ export default function Settings() {
     // 設定を読み込む
     loadSettings().then((settings) => {
       if (settings) {
-        setFormValues(settings);
+        setFormValues({
+          workTime: settings.workTime ?? DEFAULT_WORK_TIME,
+          shortBreakTime: settings.shortBreakTime ?? DEFAULT_SHORT_BREAK_TIME,
+          longBreakTime: settings.longBreakTime ?? DEFAULT_LONG_BREAK_TIME,
+        });
       }
     });
   }, []);
 
   const handleChange = (key: keyof SettingValues, value: string) => {
-    const intValue = value === "" ? 0 : parseInt(value, 10);
+    const intValue = parseInt(value, 10);
     setFormValues((prev) => ({
       ...prev,
-      [key]: isNaN(intValue) ? 300 : intValue,
+      [key]: intValue,
     }));
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.formGroup}>
         <Text style={styles.label}>作業時間（秒）</Text>
         <TextInput
-          value={formValues.workTime.toString()}
+          value={
+            isNaN(formValues.workTime) ? "" : formValues.workTime.toString()
+          }
           keyboardType="number-pad"
           onChangeText={(text) => handleChange("workTime", text)}
           style={styles.input}
@@ -48,7 +61,11 @@ export default function Settings() {
       <View style={styles.formGroup}>
         <Text style={styles.label}>短い休憩時間（秒）</Text>
         <TextInput
-          value={formValues.shortBreakTime.toString()}
+          value={
+            isNaN(formValues.shortBreakTime)
+              ? ""
+              : formValues.shortBreakTime.toString()
+          }
           keyboardType="number-pad"
           onChangeText={(text) => handleChange("shortBreakTime", text)}
           style={styles.input}
@@ -57,19 +74,30 @@ export default function Settings() {
       <View style={styles.formGroup}>
         <Text style={styles.label}>長い休憩時間（秒）</Text>
         <TextInput
-          value={formValues.longBreakTime.toString()}
+          value={
+            isNaN(formValues.longBreakTime)
+              ? ""
+              : formValues.longBreakTime.toString()
+          }
           keyboardType="number-pad"
           onChangeText={(text) => handleChange("longBreakTime", text)}
           style={styles.input}
         />
       </View>
       <View
-        style={{ flexGrow: 1, justifyContent: "flex-end", paddingVertical: 48 }}
+        style={{
+          marginTop: 48,
+        }}
       >
         <Button
           title="保存する"
           backgroundColor="#007bff"
           textColor="#fff"
+          disabled={
+            isNaN(formValues.workTime) ||
+            isNaN(formValues.shortBreakTime) ||
+            isNaN(formValues.longBreakTime)
+          }
           onPress={() => {
             saveSettings(formValues).then(() => {
               Alert.alert("保存しました");
@@ -77,7 +105,7 @@ export default function Settings() {
           }}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
