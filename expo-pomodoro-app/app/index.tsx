@@ -1,45 +1,17 @@
+import { Button } from "@/components/Button";
+import {
+  DEFAULT_LONG_BREAK_TIME,
+  DEFAULT_SHORT_BREAK_TIME,
+  DEFAULT_WORK_TIME,
+  loadSettings,
+} from "@/libs/settings";
+import { Ionicons } from "@expo/vector-icons";
 import { useKeepAwake } from "expo-keep-awake";
-import React, { useState, useEffect } from "react";
+import { router, Stack, useFocusEffect } from "expo-router";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Text, View, Vibration, Pressable, Platform } from "react-native";
 
-const WORK_TIME = 25 * 60; // 25 minutes
-const SHORT_BREAK_TIME = 5 * 60; // 5 minutes
-const LONG_BREAK_TIME = 15 * 60; // 15 minutes
-
 const POMODORO_COUNT = 4;
-
-function Button(
-  props: {
-    title: string;
-    backgroundColor: string;
-  } & React.ComponentProps<typeof Pressable>
-) {
-  const { backgroundColor, title } = props;
-  return (
-    <Pressable
-      {...props}
-      style={({ pressed }) => [
-        {
-          backgroundColor: pressed ? "darkgray" : backgroundColor,
-          padding: 10,
-          borderRadius: 5,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          opacity: props.disabled ? 0.5 : 1,
-        },
-      ]}
-    >
-      <Text
-        style={{
-          fontSize: 24,
-        }}
-      >
-        {title}
-      </Text>
-    </Pressable>
-  );
-}
 
 // 秒をmm:ss形式に変換
 function formatTime(seconds: number) {
@@ -52,11 +24,28 @@ function formatTime(seconds: number) {
 
 export default function Index() {
   useKeepAwake(); // スリープを防ぐ
+  const [settings, setSettings] = useState({
+    workTime: DEFAULT_WORK_TIME,
+    shortBreakTime: DEFAULT_SHORT_BREAK_TIME,
+    longBreakTime: DEFAULT_LONG_BREAK_TIME,
+  });
 
-  const [seconds, setSeconds] = useState(WORK_TIME);
+  const [seconds, setSeconds] = useState(settings.workTime);
   const [isActive, setIsActive] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
   const [pomodoroCount, setPomodoroCount] = useState(1);
+
+  useFocusEffect(
+    useCallback(() => {
+      // 設定を読み込む
+      loadSettings().then((settings) => {
+        if (settings) {
+          setSettings(settings);
+          setSeconds(settings.workTime);
+        }
+      });
+    }, [])
+  );
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -78,7 +67,7 @@ export default function Index() {
       Vibration.vibrate(Platform.OS === "ios" ? [1000, 1000, 1000] : 3000);
       setIsActive(false);
       setIsBreak(false);
-      setSeconds(WORK_TIME);
+      setSeconds(settings.workTime);
     }
 
     // 作業中にタイマーが0になったとき
@@ -89,8 +78,8 @@ export default function Index() {
       // 4回目の作業後は長い休憩
       startBreak(
         pomodoroCount % POMODORO_COUNT === 0
-          ? LONG_BREAK_TIME
-          : SHORT_BREAK_TIME
+          ? settings.longBreakTime
+          : settings.shortBreakTime
       );
     }
 
@@ -110,25 +99,25 @@ export default function Index() {
   // タイマーをリセット
   const resetTimer = () => {
     setIsActive(false);
-    setSeconds(WORK_TIME);
+    setSeconds(settings.workTime);
     setIsBreak(false);
     setPomodoroCount(1);
   };
 
   // 休憩を開始
-  const startBreak = (breakTine: number) => {
+  const startBreak = (breakTime: number) => {
     setIsActive(true);
     setIsBreak(true);
-    setSeconds(breakTine);
+    setSeconds(breakTime);
   };
 
   // 背景色を変更
-  const getBackgroundColor = () => {
+  const backgroundColor = useMemo(() => {
     if (isBreak) {
       return (pomodoroCount - 1) % POMODORO_COUNT === 0 ? "#FFD700" : "#ADD8E6";
     }
     return "#90EE90";
-  };
+  }, [isBreak, pomodoroCount]);
 
   return (
     <View
@@ -136,10 +125,21 @@ export default function Index() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: getBackgroundColor(),
+        backgroundColor,
         gap: 20,
       }}
     >
+      <Stack.Screen
+        options={{
+          title: "Pomodoro Timer",
+          headerRight: () => (
+            <Pressable onPress={() => router.navigate("/settings")}>
+              <Ionicons name="settings-outline" size={24} color="black" />
+            </Pressable>
+          ),
+          headerStyle: { backgroundColor },
+        }}
+      />
       <Text style={{ fontSize: 24 }}>
         {isBreak ? "休憩" : `作業 ${pomodoroCount}`}
       </Text>
