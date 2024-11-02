@@ -245,6 +245,8 @@ export const DEFAULT_WORK_TIME = 25 * 60; // 作業時間のデフォルト値�
 export const DEFAULT_SHORT_BREAK_TIME = 5 * 60; // 短い休憩時間のデフォルト値（5分）
 export const DEFAULT_LONG_BREAK_TIME = 15 * 60; // 長い休憩時間のデフォルト値（15分）
 
+const STORAGE_KEY = "settings";
+
 export type SettingValues = {
   workTime: number;
   shortBreakTime: number;
@@ -257,7 +259,7 @@ export type SettingValues = {
  */
 export async function loadSettings(): Promise<SettingValues | null> {
   try {
-    const settings = await AsyncStorage.getItem("settings");
+    const settings = await AsyncStorage.getItem(STORAGE_KEY);
     return settings ? JSON.parse(settings) : null;
   } catch (error) {
     console.error(error);
@@ -271,7 +273,7 @@ export async function loadSettings(): Promise<SettingValues | null> {
  */
 export async function saveSettings(settings: SettingValues) {
   try {
-    await AsyncStorage.setItem("settings", JSON.stringify(settings));
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   } catch (error) {
     console.error(error);
   }
