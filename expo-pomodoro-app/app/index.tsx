@@ -64,7 +64,9 @@ export default function Index() {
 
     // 休憩中にタイマーが0になったとき
     if (seconds === 0 && isBreak) {
-      Vibration.vibrate(Platform.OS === "ios" ? [1000, 1000, 1000] : 3000);
+      Vibration.vibrate(
+        Platform.OS === "ios" ? [600, 600, 600] : [600, 400, 600, 400, 600, 400]
+      );
       setIsActive(false);
       setIsBreak(false);
       setSeconds(settings.workTime);
