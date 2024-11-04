@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "tvos", "android", "web"],
+  "ios": {
+    "modules": ["NetworkMonitorModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.networkmonitormodule.NetworkMonitorModule"]
+  }
+}

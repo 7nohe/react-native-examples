@@ -24,3 +24,19 @@ npm run android
 npm run reset-project
 rm -rf app-example
 ```
+
+## 2. ローカル Expo Module の作成
+
+```bash
+npx create-expo-module@latest --local
+
+✔ What is the name of the local module? … network-monitor-module
+✔ What is the native module name? … NetworkMonitorModule
+✔ What is the Android package name? … expo.modules.networkmonitormodule
+```
+
+## 3. ネイティブプロジェクトの生成
+
+```bash
+npx expo prebuild --clean
+```
