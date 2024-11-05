@@ -89,8 +89,8 @@ class NetworkMonitorModule : Module() {
 
     Function("isOnline") {
       val network = connectivityManager.activeNetwork
-      val isInternetReachable = network != null
-      return@Function isInternetReachable
+      val isOnline = network != null
+      return@Function isOnline
     }
   }
 }
@@ -195,3 +195,40 @@ npm run start
 
 を実行して Expo の開発サーバーを起動し、
 Android Studio でビルドして起動する。
+
+## (Mac のみ) iOS のネイティブモジュールの実装
+
+```swift
+import ExpoModulesCore
+import Network
+
+public class NetworkMonitorModule: Module {
+  private let monitor = NWPathMonitor()
+  private let monitorQueue = DispatchQueue.global(qos: .default)
+
+  public func definition() -> ModuleDefinition {
+    Name("NetworkMonitorModule")
+
+    OnCreate {
+        monitor.start(queue: monitorQueue)
+    }
+
+    OnDestroy {
+        monitor.cancel()
+    }
+
+    Function("isOnline") {
+        let currentPath = monitor.currentPath
+        let isOnline = currentPath.status == .satisfied
+        print(currentPath.status)
+        return isOnline
+    }
+
+    Function("isWifi") {
+        let currentPath = monitor.currentPath
+        let isWifi = currentPath.usesInterfaceType(.wifi)
+        return isWifi
+    }
+  }
+}
+```

@@ -3,9 +3,9 @@ package expo.modules.networkmonitormodule
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import expo.modules.kotlin.exception.Exceptions
 
 class NetworkMonitorModule : Module() {
   private val context: Context
@@ -18,8 +18,8 @@ class NetworkMonitorModule : Module() {
 
     Function("isOnline") {
       val network = connectivityManager.activeNetwork
-      val isInternetReachable = network != null
-      return@Function isInternetReachable
+      val isOnline = network != null
+      return@Function isOnline
     }
 
     Function("isWifi") {
