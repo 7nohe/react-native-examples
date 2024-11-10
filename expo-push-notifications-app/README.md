@@ -43,7 +43,7 @@ app/index.tsx を以下のように書き換える。
 
 ```tsx
 import { useState, useEffect, useRef } from "react";
-import { Text, View, Button, Platform } from "react-native";
+import { Text, View, Platform } from "react-native";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
@@ -55,26 +55,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
-async function sendPushNotification(expoPushToken: string) {
-  const message = {
-    to: expoPushToken,
-    sound: "default",
-    title: "Original Title",
-    body: "And here is the body!",
-    data: { someData: "goes here" },
-  };
-
-  await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Accept-encoding": "gzip, deflate",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(message),
-  });
-}
 
 function handleRegistrationError(errorMessage: string) {
   alert(errorMessage);
@@ -175,12 +155,6 @@ export default function Index() {
           {notification && JSON.stringify(notification.request.content.data)}
         </Text>
       </View>
-      <Button
-        title="Press to Send Notification"
-        onPress={async () => {
-          await sendPushNotification(expoPushToken);
-        }}
-      />
     </View>
   );
 }
@@ -241,15 +215,67 @@ app.json の`android.package`にパッケージ名を設定する。
 }
 ```
 
-## 4. Google サービスアカウントキーををプロジェクトへ追加する
+## 4. Google サービスアカウントキーをプロジェクトへ追加する
 
 https://docs.expo.dev/push-notifications/fcm-credentials/ の「Create a new Google Service Account Key」の手順に従って Google サービスアカウントキーを作成し、プロジェクトへ追加する。
 
 補足:
 
 - Step 5 で google-services.json のダウンロードは Firebase のプロジェクト上で Android アプリを追加が必要
-- ドキュメントにあるように google-services.json は.gitignore に追加して git 管理外にする
 
-```.gitignore
-google-services.json
+### (オプショナル) google-services.json を git 管理しないようにする方法
+
+1. `google-services.json`を.gitignore に追加して git 管理外にする
+2. EAS Build で使えるようにするために、google-services.json を EAS サーバーにアップロードする
+
+```bash
+eas secret:create --scope project --name GOOGLE_SERVICES_JSON --type file --value ./google-services.json
 ```
+
+3. app.json を app.config.ts に変更し、環境変数 GOOGLE_SERVICES_JSON を参照するようにする
+
+```ts
+export default {
+  ...
+  android: {
+    googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
+    ...
+  },
+};
+```
+
+## 5. Development Build を作成する
+
+Push 通知機能のデバッグを行うために、[Development Build](https://docs.expo.dev/develop/development-builds/introduction/) をセットアップする。
+
+まず、`expo-dev-client` パッケージをインストールする。
+
+```bash
+npx expo install expo-dev-client
+```
+
+以下のコマンドで Development Build を作成する。
+
+```bash
+eas build --profile development --platform android
+```
+
+ビルドが完了したら発行された URL にアクセスし、「Install」ボタンをクリック、表示された QR コードを Android 端末で読み取り、apk ファイルをダウンロードする。
+ダウンロードが完了したら、端末に apk ファイルをインストールする。
+
+## 6. 動作確認
+
+```bash
+npm start
+```
+
+ターミナルに表示された QR コードを Expo Go アプリまたは QR コードスキャナーで読み取り、Development Build アプリを起動する。
+
+アプリが起動して、Push 通知の許可を求めるダイアログが表示されたら許可する。
+
+その後、アプリの画面とターミナルに Push 通知のトークンが表示されるので、コピーしておく。
+
+[Push notifications tool](https://expo.dev/notifications)でコピーしたトークンを入力し、Push 通知を送信する。
+
+アプリがバックグラウンドにある場合、Push 通知が届くと通知が表示される。
+アプリがフォアグラウンドにある場合、Push 通知が届くと画面に通知内容が表示される。
