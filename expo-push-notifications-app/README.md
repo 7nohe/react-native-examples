@@ -11,6 +11,27 @@
 - [Firebase アカウント](https://firebase.google.com/)
 - EAS CLI
 
+## Push 通知の流れ
+
+```mermaid
+sequenceDiagram
+    participant モバイルアプリ
+    participant ユーザー
+    participant Expo' PNS
+    participant バックエンドアプリ
+
+    モバイルアプリ ->> ユーザー: 1. 通知許可のリクエスト
+    ユーザー -->> モバイルアプリ: 2. 通知許可
+    モバイルアプリ ->> Expo' PNS: 3. Expo Pushトークンのリクエスト
+    Expo' PNS -->> モバイルアプリ: 4. Expo Pushトークンの受け取り
+    モバイルアプリ ->> バックエンドアプリ: 5. Expo Pushトークンとユーザー情報を送信
+
+    Note right of バックエンドアプリ: 通知の送信タイミング（例: 投稿が「いいね」された）
+
+    バックエンドアプリ ->> Expo' PNS: 6. 通知送信のリクエスト
+    Expo' PNS -->> モバイルアプリ: 7. 通知送信
+```
+
 ## 1. プロジェクトの作成
 
 ```bash

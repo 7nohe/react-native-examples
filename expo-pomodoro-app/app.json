@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "expo-pomodoro-app",
+    "name": "Expo Pomodoro App",
     "slug": "expo-pomodoro-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "expopomodoroapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
