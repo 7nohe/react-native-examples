@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.daiki7nohe.easupdatesapp"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,20 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "c9d9c58b-b191-4219-914c-271c4f932257"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/c9d9c58b-b191-4219-914c-271c4f932257"
     }
   }
 }
