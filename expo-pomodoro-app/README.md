@@ -1,4 +1,4 @@
-## Expo Image Picker App
+## Expo Pomodoro App
 
 ## 環境
 
