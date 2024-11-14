@@ -29,11 +29,12 @@ npx expo install expo-image-picker
 
 ## 3. 写真ライブラリアクセス機能の実装
 
+app/index.tsx:
+
 ```tsx
 import { useState } from "react";
 import { Button, Image, View, StyleSheet, ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Stack } from "expo-router";
 
 export default function Index() {
   const [images, setImages] = useState<string[]>([]);
@@ -56,12 +57,9 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: "ホーム",
-          headerRight: () => <Button title="写真を選択" onPress={pickImage} />,
-        }}
-      />
+      <View style={{ marginVertical: 24 }}>
+        <Button title="写真を追加" onPress={pickImage} />
+      </View>
       <ScrollView>
         {images.map((image, index) => (
           <Image key={index} source={{ uri: image }} style={styles.image} />
@@ -98,7 +96,6 @@ import {
   Text,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Stack } from "expo-router";
 
 export default function Index() {
   const [images, setImages] = useState<string[]>([]);
@@ -146,12 +143,9 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: "ホーム",
-          headerRight: () => <Button title="写真を追加" onPress={addPhoto} />,
-        }}
-      />
+      <View style={{ marginVertical: 24 }}>
+        <Button title="写真を追加" onPress={addPhoto} />
+      </View>
       {/* 省略 */}
     </View>
   );

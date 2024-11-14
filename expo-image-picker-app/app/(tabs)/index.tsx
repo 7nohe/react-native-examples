@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button, View, StyleSheet, Alert, Text, FlatList } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Stack } from "expo-router";
 import { Image } from "expo-image";
 
 export default function Index() {
@@ -64,12 +63,9 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen
-        options={{
-          title: "ホーム",
-          headerRight: () => <Button title="写真を追加" onPress={addPhoto} />,
-        }}
-      />
+      <View style={{ marginVertical: 24 }}>
+        <Button title="写真を追加" onPress={addPhoto} />
+      </View>
       <FlatList
         data={images}
         numColumns={2}
