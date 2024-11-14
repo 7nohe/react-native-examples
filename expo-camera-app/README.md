@@ -29,6 +29,8 @@ npx expo install expo-camera
 
 ## 3. カメラ機能の実装
 
+app/index.tsx:
+
 ```tsx
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
