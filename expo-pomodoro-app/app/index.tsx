@@ -1,4 +1,7 @@
 import { Button } from "@/components/Button";
+import { useKeepAwake } from "expo-keep-awake";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Text, View, Vibration, Platform, Pressable } from "react-native";
 import {
   DEFAULT_LONG_BREAK_TIME,
   DEFAULT_SHORT_BREAK_TIME,
@@ -6,10 +9,7 @@ import {
   loadSettings,
 } from "@/libs/settings";
 import { Ionicons } from "@expo/vector-icons";
-import { useKeepAwake } from "expo-keep-awake";
 import { router, Stack, useFocusEffect } from "expo-router";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Text, View, Vibration, Pressable, Platform } from "react-native";
 
 const POMODORO_COUNT = 4;
 
@@ -135,7 +135,7 @@ export default function Index() {
         options={{
           title: "Pomodoro Timer",
           headerRight: () => (
-            <Pressable onPress={() => router.navigate("/settings")}>
+            <Pressable onPressIn={() => router.navigate("/settings")}>
               <Ionicons name="settings-outline" size={24} color="black" />
             </Pressable>
           ),

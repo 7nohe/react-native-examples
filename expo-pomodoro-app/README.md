@@ -83,8 +83,8 @@ app/index.tsx を以下のように書き換える。
 ```tsx
 import { Button } from "@/components/Button";
 import { useKeepAwake } from "expo-keep-awake";
-import React, { useState, useEffect } from "react";
-import { Text, View, Vibration, Pressable, Platform } from "react-native";
+import React, { useState, useEffect, useMemo } from "react";
+import { Text, View, Vibration, Platform } from "react-native";
 
 const WORK_TIME = 25 * 60; // 25 minutes
 const SHORT_BREAK_TIME = 5 * 60; // 5 minutes
@@ -126,7 +126,9 @@ export default function Index() {
 
     // 休憩中にタイマーが0になったとき
     if (seconds === 0 && isBreak) {
-      Vibration.vibrate(Platform.OS === "ios" ? [1000, 1000, 1000] : 3000);
+      Vibration.vibrate(
+        Platform.OS === "ios" ? [600, 600, 600] : [600, 400, 600, 400, 600, 400]
+      );
       setIsActive(false);
       setIsBreak(false);
       setSeconds(WORK_TIME);
@@ -514,7 +516,7 @@ export default function Index() {
         options={{
           title: "Pomodoro Timer",
           headerRight: () => (
-            <Pressable onPress={() => router.navigate("/settings")}>
+            <Pressable onPressIn={() => router.navigate("/settings")}>
               <Ionicons name="settings-outline" size={24} color="black" />
             </Pressable>
           ),
