@@ -52,7 +52,8 @@ studio android
 # または手動でAndroid Studioを開いてandroidディレクトリを開く
 ```
 
-> [!NOTE] > `studio` コマンドは Android Studio を開いて Tools > Create Command-line Launcher...から設定できる。
+> [!NOTE] 
+> `studio` コマンドは Android Studio を開いて Tools > Create Command-line Launcher...から設定できる。
 
 ## 5. Android Studio でアプリをビルドして起動する
 
