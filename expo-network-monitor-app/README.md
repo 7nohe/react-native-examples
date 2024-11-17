@@ -35,6 +35,26 @@ npx create-expo-module@latest --local
 ✔ What is the Android package name? … expo.modules.networkmonitormodule
 ```
 
+app/index.tsx に以下のようにネイティブモジュールを組み込む。
+
+```tsx
+import { Text, View } from "react-native";
+import NetworkMonitorModule from "../modules/network-monitor-module";
+export default function Index() {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Text>{NetworkMonitorModule.hello()}</Text>
+    </View>
+  );
+}
+```
+
 ## 3. ネイティブプロジェクトの生成
 
 Expo Module の動作確認にはネイティブプロジェクト（ios/android ディレクトリ）が必要になるため、以下のコマンドで生成する。
@@ -56,6 +76,14 @@ studio android
 > `studio` コマンドは Android Studio を開いて Tools > Create Command-line Launcher...から設定できる。
 
 ## 5. Android Studio でアプリをビルドして起動する
+
+## 5.1 Expo サーバーの起動
+
+```bash
+npm run start
+```
+
+## 5.2 Android Studio でビルド
 
 Android Studio のメニューから `app` ボタンをクリックしてビルドを開始する。
 
