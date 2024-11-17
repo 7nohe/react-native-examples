@@ -1,9 +1,17 @@
 {
-  "platforms": ["ios", "tvos", "android", "web"],
-  "ios": {
-    "modules": ["NetworkMonitorModule"]
+  "platforms": [
+    "apple",
+    "android",
+    "web"
+  ],
+  "apple": {
+    "modules": [
+      "NetworkMonitorModule"
+    ]
   },
   "android": {
-    "modules": ["expo.modules.networkmonitormodule.NetworkMonitorModule"]
+    "modules": [
+      "expo.modules.networkmonitormodule.NetworkMonitorModule"
+    ]
   }
 }
