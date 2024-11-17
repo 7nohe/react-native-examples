@@ -99,10 +99,12 @@ Android Studio のメニューから `app` ボタンをクリックしてビル�
 
 ```kotlin
 
+
 package expo.modules.networkmonitormodule
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import expo.modules.kotlin.exception.Exceptions
@@ -120,6 +122,12 @@ class NetworkMonitorModule : Module() {
       val network = connectivityManager.activeNetwork
       val isOnline = network != null
       return@Function isOnline
+    }
+
+    Function("isWifi") {
+      val network = connectivityManager.activeNetwork
+      val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+      return@Function networkCapabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ?: false
     }
   }
 }
@@ -260,4 +268,13 @@ public class NetworkMonitorModule: Module {
     }
   }
 }
+```
+
+## .gitignore に android/ios を追加
+
+ネイティブモジュールの動作確認ができたら、android/ios ディレクトリは管理する必要はないので git の管理対象から外してよい。
+
+```bash
+android
+ios
 ```
