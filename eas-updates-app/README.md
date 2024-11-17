@@ -8,11 +8,11 @@
 ## 1. プロジェクトの作成
 
 ```bash
-npx create-expo-app@latest expo-pomodoro-app
+npx create-expo-app@latest eas-updates-app
 ```
 
 ```bash
-cd expo-pomodoro-app
+cd eas-updates-app
 npm run ios
 # または
 npm run android
