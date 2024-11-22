@@ -1,6 +1,6 @@
 export default {
   expo: {
-    name: "simple-reminder",
+    name: "Simple Reminder",
     slug: "simple-reminder",
     version: "1.0.0",
     orientation: "portrait",
