@@ -2,20 +2,22 @@
 
 ## 環境
 
-- Node.js: v20.16.0
-- npm: v10.8.1
+- Node.js: v22.20.0
+- npm: v10.9.3
 
 ## 1. プロジェクトの作成
 
 ```bash
 npx create-expo-app@latest expo-camera-app
 cd expo-camera-app
+
+# iOSシミュレータまたはAndroidエミュレータで起動
 npm run ios
 # または
 npm run android
 ```
 
-不要なボイラープレートを削除する。
+シミュレータで起動が確認できたら、不要なボイラープレートを削除する。
 
 ```bash
 npm run reset-project
@@ -107,6 +109,10 @@ const styles = StyleSheet.create({
 
 ## 4. QR・バーコードリーダーの実装
 
+コードを追加、修正して、QRコード・バーコードリーダーを実装する。
+
+app/index.tsx:
+
 ```tsx
 import {
   CameraView,
@@ -124,6 +130,7 @@ export default function Index() {
     setBarcodeResult(data);
   }
 
+   // JSX部分は以下のように差し替え
   return (
     <View style={styles.container}>
       <CameraView
