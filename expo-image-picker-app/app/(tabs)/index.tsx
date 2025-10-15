@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Button, View, StyleSheet, Alert, Text, FlatList } from "react-native";
+import {
+  Button,
+  View,
+  StyleSheet,
+  Alert,
+  Text,
+  FlatList,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 
@@ -24,7 +31,7 @@ export default function Index() {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
